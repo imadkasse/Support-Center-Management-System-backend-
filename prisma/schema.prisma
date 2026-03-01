@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  TEACHER
+  STUDENT
+  PARENT
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      UserRole
+  firstName String
+  lastName  String
+  phone     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teacherProfile    TeacherProfile?
+  studentProfile    StudentProfile?
+  parentStudentLinks ParentStudentLink[] @relation("ParentLinks")
+  linkedToParents   ParentStudentLink[] @relation("StudentLinks")
+  createdClasses    Class[]              @relation("ClassTeacher")
+  attendances       Attendance[]
+}
+
+model TeacherProfile {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialization String?
+  hireDate     DateTime @default(now())
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model StudentProfile {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dateOfBirth  DateTime?
+  address      String?
+  emergencyContact String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  enrollments  Enrollment[]
+}
+
+model ParentStudentLink {
+  id        Int      @id @default(autoincrement())
+  parentId  Int
+  studentId Int
+  parent    User     @relation("ParentLinks", fields: [parentId], references: [id], onDelete: Cascade)
+  student   User     @relation("StudentLinks", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([parentId, studentId])
+}
+
+model Room {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  capacity  Int
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  classes   Class[]
+}
+
+model Class {
+  id              Int      @id @default(autoincrement())
+  name            String
+  subject         String
+  roomId          Int
+  room            Room     @relation(fields: [roomId], references: [id])
+  teacherId       Int
+  teacher         User     @relation("ClassTeacher", fields: [teacherId], references: [id])
+  schedule        String   // JSON string for schedule: {"day": "MONDAY", "startTime": "09:00", "endTime": "10:30"}
+  maxCapacity    Int
+  currentCapacity Int     @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  enrollments     Enrollment[]
+  attendances     Attendance[]
+}
+
+model Enrollment {
+  id              Int              @id @default(autoincrement())
+  studentId       Int
+  student         StudentProfile   @relation(fields: [studentId], references: [id])
+  classId         Int
+  class           Class            @relation(fields: [classId], references: [id])
+  subscriptionStart DateTime       @default(now())
+  subscriptionEnd   DateTime
+  amountPaid      Float
+  status          EnrollmentStatus @default(ACTIVE)
+  paymentConfirmed Boolean         @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  attendances     Attendance[]
+
+  @@unique([studentId, classId])
+}
+
+model Attendance {
+  id          Int            @id @default(autoincrement())
+  studentId   Int
+  student     User           @relation(fields: [studentId], references: [id])
+  classId     Int
+  class       Class          @relation(fields: [classId], references: [id])
+  enrollment  Enrollment    @relation(fields: [enrollmentId], references: [id])
+  enrollmentId Int
+  date        DateTime       @db.Date
+  status      AttendanceStatus
+  notes       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@unique([studentId, classId, date])
+}

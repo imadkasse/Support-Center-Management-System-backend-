@@ -2,11 +2,11 @@
 
 ## Phase 1: Project Setup & Infrastructure
 
-- [X] Initialize NestJS project with TypeScript
-- [ ] Set up PostgreSQL database with Prisma ORM
-- [X] Configure ESLint, Prettier, and Husky
-- [ ] Set up environment configuration (.env)
-- [ ] Create base module structure
+- [x] Initialize NestJS project with TypeScript
+- [x] Set up PostgreSQL database with Prisma ORM
+- [x] Configure ESLint, Prettier, and Husky
+- [x] Set up environment configuration (.env)
+- [x] Create base module structure
 
 ## Phase 2: Authentication & Authorization
 
@@ -83,5 +83,3 @@
 
 - [ ] Get student attendance history
 - [ ] Get subscription status
-
-
