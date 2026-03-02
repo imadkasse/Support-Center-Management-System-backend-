@@ -78,7 +78,7 @@ export class AuthService {
         lastName: registerDto.lastName,
         phone: registerDto.phone,
         // hardcoded role for now, can be modified to accept from registerDto if needed
-        role: 'STUDENT', // Default role, can be changed based on requirements
+        role: registerDto.role, // Default role, can be changed based on requirements
       },
     });
 

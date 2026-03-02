@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
@@ -33,9 +38,12 @@ export class RolesGuard implements CanActivate {
 
     /* eslint-disable @typescript-eslint/no-unsafe-member-access */
     const user = request.user as AuthUser | undefined;
-    if (!user || !user.role) {
-      return false;
+    if (user?.role === requiredRoles[0]) {
+      return true;
+    } else {
+      throw new UnauthorizedException(
+        'You are not authorized to access this route',
+      );
     }
-    return requiredRoles.some((role) => user.role === role);
   }
 }

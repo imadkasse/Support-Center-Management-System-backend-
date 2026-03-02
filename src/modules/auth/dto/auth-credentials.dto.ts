@@ -36,6 +36,6 @@ export class RegisterDto {
   @IsString()
   phone?: string;
 
-  // @IsEnum(UserRole)
-  // role: UserRole;
+  @IsEnum(UserRole)
+  role: UserRole;
 }
