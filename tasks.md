@@ -47,11 +47,11 @@
 
 ## Phase 5: Subscription System
 
-- [ ] Create Enrollment entity with subscription fields (if not existed)
-- [ ] Implement manual payment confirmation
-- [ ] Build subscription activation logic (+30 days)
-- [ ] Create daily cron job for expiration check
-- [ ] Implement automatic status update (ACTIVE → EXPIRED)
+- [x] Create Enrollment entity with subscription fields (if not existed)
+- [x] Implement manual payment confirmation
+- [x] Build subscription activation logic (+30 days)
+- [x] Create daily cron job for expiration check
+- [x] Implement automatic status update (ACTIVE → EXPIRED)
 
 ## Phase 6: Attendance Management
 
