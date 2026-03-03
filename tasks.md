@@ -20,30 +20,30 @@
 
 ### Room Management
 
-- [ ] Create Room entity (if not existed)
-- [ ] Build Room CRUD endpoints (Admin only)
-- [ ] Add capacity validation rules
+- [x] Create Room entity (if not existed)
+- [x] Build Room CRUD endpoints (Admin only)
+- [x] Add capacity validation rules
 
 ### Teacher Management
 
-- [ ] Create Teacher entity(if not existed) (extends User)
-- [ ] Build Teacher CRUD endpoints (Admin only)
-- [ ] Implement teacher deactivation
+- [x] Create Teacher entity(if not existed) (extends User)
+- [x] Build Teacher CRUD endpoints (Admin only)
+- [x] Implement teacher deactivation
 
 ### Class Management
 
-- [ ] Create Class entity and relations (if not existed)
-- [ ] Build Class CRUD endpoints (Admin only)
-- [ ] Add capacity tracking and occupancy percentage
-- [ ] Implement class schedule validation
+- [x] Create Class entity and relations (if not existed)
+- [x] Build Class CRUD endpoints (Admin only)
+- [x] Add capacity tracking and occupancy percentage
+- [x] Implement class schedule validation
 
 ## Phase 4: Student Management & Enrollment
 
-- [ ] Create Student entity and StudentProfile (if not existed)
-- [ ] Build Student CRUD endpoints (Admin only)
-- [ ] Implement enrollment flow
-- [ ] Add duplicate enrollment prevention
-- [ ] Create student deactivation
+- [x] Create Student entity and StudentProfile (if not existed)
+- [x] Build Student CRUD endpoints (Admin only)
+- [x] Implement enrollment flow
+- [x] Add duplicate enrollment prevention
+- [x] Create student deactivation
 
 ## Phase 5: Subscription System
 

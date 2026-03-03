@@ -40,7 +40,7 @@ export class TeachersController {
   // add guard (admin or teacher himself)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    console.log(id)
+    console.log(id);
     return this.teachersService.findOne(id);
   }
   // add guard (admin or teacher himself)

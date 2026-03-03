@@ -86,7 +86,7 @@ export class TeachersService {
   async findOne(id: number) {
     const teacher = await this.prisma.user.findUnique({
       where: { id, role: UserRole.TEACHER },
-      // next time 
+      // next time
       // include: {
       //   teacherProfile: true,
       // },
