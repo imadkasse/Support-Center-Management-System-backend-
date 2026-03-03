@@ -55,11 +55,10 @@
 
 ## Phase 6: Attendance Management
 
-- [ ] Create Attendance entity (if not existed)
-- [ ] Build attendance recording endpoints (Teacher only)
-- [ ] Implement subscription expiration check before marking attendance
-- [ ] Add teacher-class assignment validation
-- [ ] Create attendance history retrieval
+- [x] Create Attendance entity (if not existed)
+- [x] Build attendance recording endpoints (Teacher only)
+- [x] Implement subscription expiration check before marking attendance
+- [x] Add teacher-class assignment validation
 
 ## Phase 7: Dashboard APIs
 
