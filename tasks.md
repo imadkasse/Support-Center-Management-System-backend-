@@ -64,21 +64,21 @@
 
 ### Admin Dashboard
 
-- [ ] Total active students count
-- [ ] Total enrolled students count
-- [ ] Active classes count
-- [ ] Full capacity classes count
-- [ ] Expired subscriptions count
-- [ ] Monthly revenue calculation
+- [x] Total active students count
+- [x] Total enrolled students count
+- [x] Active classes count
+- [x] Full capacity classes count
+- [x] Expired subscriptions count
+- [x] Monthly revenue calculation
 
 ### Student Dashboard
 
-- [ ] Get enrolled classes
-- [ ] Get weekly schedule
-- [ ] Get subscription status
-- [ ] Calculate days remaining
+- [x] Get enrolled classes
+- [x] Get weekly schedule
+- [x] Get subscription status
+- [x] Calculate days remaining
 
 ### Parent Dashboard
 
-- [ ] Get student attendance history
-- [ ] Get subscription status
+- [x] Get student attendance history
+- [x] Get subscription status
