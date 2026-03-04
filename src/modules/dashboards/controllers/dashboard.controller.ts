@@ -14,11 +14,11 @@ interface AuthenticatedRequest {
 }
 
 @Controller('dashboards')
+@UseGuards(JwtAuthGuard, AdminGuard)
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get('admin/stats')
-  @UseGuards(JwtAuthGuard, AdminGuard)
   getAdminStats() {
     return this.dashboardService.getAdminStats();
   }

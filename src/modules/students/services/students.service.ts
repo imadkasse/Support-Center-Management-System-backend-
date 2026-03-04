@@ -7,6 +7,8 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { CreateStudentDto } from '../dto/create-student.dto';
 import { UpdateStudentDto } from '../dto/update-student.dto';
 import { User, UserRole } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+
 
 @Injectable()
 export class StudentsService {
@@ -20,11 +22,12 @@ export class StudentsService {
     if (existingUser) {
       throw new BadRequestException('Email already exists');
     }
-
+    // hash password before saving to database
+    const hashedPassword = await bcrypt.hash(createStudentDto.password, 10);
     const user = await this.prisma.user.create({
       data: {
         email: createStudentDto.email,
-        password: createStudentDto.password,
+        password: hashedPassword,
         role: UserRole.STUDENT,
         firstName: createStudentDto.firstName,
         lastName: createStudentDto.lastName,
