@@ -9,7 +9,6 @@ import { UpdateStudentDto } from '../dto/update-student.dto';
 import { User, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
-
 @Injectable()
 export class StudentsService {
   constructor(private prisma: PrismaService) {}

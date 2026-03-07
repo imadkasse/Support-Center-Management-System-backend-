@@ -43,6 +43,11 @@ export class TeachersController {
     console.log(id);
     return this.teachersService.findOne(id);
   }
+
+  @Get(':id/classes')
+  getClasses(@Param('id', ParseIntPipe) id: number) {
+    return this.teachersService.getClasses(id);
+  }
   // add guard (admin or teacher himself)
   @Put(':id')
   update(

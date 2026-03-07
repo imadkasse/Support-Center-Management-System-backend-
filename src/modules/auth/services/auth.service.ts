@@ -8,7 +8,14 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { LoginDto, RegisterDto } from '../dto/auth-credentials.dto';
 import { JwtPayload } from '../dto/jwt-payload.dto';
-import { User } from '@prisma/client';
+import { User, TeacherProfile, StudentProfile } from '@prisma/client';
+
+// hidden password field for User type
+export interface UserWithProfile extends User {
+  teacherProfile: TeacherProfile | null;
+  studentProfile: StudentProfile | null;
+  password: never; // hidden field
+}
 
 @Injectable()
 export class AuthService {
@@ -98,5 +105,22 @@ export class AuthService {
         role: user.role,
       },
     };
+  }
+
+  async getMe(userId: number): Promise<UserWithProfile> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      include: {
+        teacherProfile: true,
+        studentProfile: true,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword as UserWithProfile;
   }
 }

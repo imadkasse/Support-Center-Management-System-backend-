@@ -27,4 +27,8 @@ export class UpdateClassDto {
   @IsInt()
   @Min(1)
   maxCapacity?: number;
+  // @IsOptional()
+  // @IsInt()
+  // @Min(1)
+  // currentCapacity?: number;
 }

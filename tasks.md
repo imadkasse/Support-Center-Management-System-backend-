@@ -82,3 +82,15 @@
 
 - [x] Get student attendance history
 - [x] Get subscription status
+
+## Phase 8: enhanceing the API
+
+- [x] Auth endpoints : {/api/auth/me}
+- [x] Parents endpoints : {/api/parents}
+- [x] ParentStudentLink endpoints : {/api/parents/link-student}
+- [x] Payments endpoints : {/api/payments}
+- [x] Teachers endpoints : {/api/teachers/:id/classes}
+
+
+
+

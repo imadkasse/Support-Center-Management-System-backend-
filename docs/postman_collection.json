@@ -1,0 +1,847 @@
+{
+  "info": {
+    "name": "School Management Platform API",
+    "description": "API collection for testing the School Management Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Pre-request script to handle login and token management",
+          "",
+          "const token = pm.environment.get('accessToken');",
+          "",
+          "// If we already have a token, skip login",
+          "if (token && token.length > 0) {",
+          "    return;",
+          "}",
+          "",
+          "// Get credentials from environment or use defaults",
+          "const email = pm.environment.get('testEmail') || 'admin@example.com';",
+          "const password = pm.environment.get('testPassword') || 'password123';",
+          "",
+          "// Perform login to get token",
+          "const loginRequest = {",
+          "    url: pm.environment.get('baseUrl') + '/auth/login',",
+          "    method: 'POST',",
+          "    header: {",
+          "        'Content-Type': 'application/json'",
+          "    },",
+          "    body: {",
+          "        mode: 'raw',",
+          "        raw: JSON.stringify({",
+          "            email: email,",
+          "            password: password",
+          "        })",
+          "    }",
+          "};",
+          "",
+          "pm.sendRequest(loginRequest, function(err, response) {",
+          "    if (err) {",
+          "        console.log('Login error: ' + err);",
+          "        return;",
+          "    }",
+          "    ",
+          "    const jsonData = response.json();",
+          "    if (jsonData.access_token) {",
+          "        pm.environment.set('accessToken', jsonData.access_token);",
+          "        console.log('Token obtained successfully');",
+          "    } else {",
+          "        console.log('Login failed: ' + JSON.stringify(jsonData));",
+          "    }",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"role\": \"STUDENT\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "Create Room",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/rooms",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Room 101\",\n  \"capacity\": 30\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Rooms",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/rooms?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Room by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/rooms/1"
+          }
+        },
+        {
+          "name": "Update Room",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/rooms/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Room 101 Updated\",\n  \"capacity\": 35\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Room",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/rooms/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teachers",
+      "item": [
+        {
+          "name": "Create Teacher",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/teachers",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"teacher@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Smith\",\n  \"phone\": \"+1234567890\",\n  \"specialization\": \"Mathematics\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Teachers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/teachers?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["teachers"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Teacher by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/teachers/1"
+          }
+        },
+        {
+          "name": "Update Teacher",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/teachers/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specialization\": \"Physics\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Teacher",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/teachers/1"
+          }
+        },
+        {
+          "name": "Get Classes by Teacher ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/teachers/1/classes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Classes",
+      "item": [
+        {
+          "name": "Create Class",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/classes",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Math 101\",\n  \"subject\": \"Mathematics\",\n  \"roomId\": 1,\n  \"teacherId\": 1,\n  \"schedule\": \"{\\\"day\\\": \\\"MONDAY\\\", \\\"startTime\\\": \\\"09:00\\\", \\\"endTime\\\": \\\"10:30\\\"}\",\n  \"maxCapacity\": 30\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Classes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/classes?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["classes"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Class by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/classes/1"
+          }
+        },
+        {
+          "name": "Update Class",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/classes/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Math 101 Advanced\",\n  \"maxCapacity\": 25\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Class",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/classes/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Students",
+      "item": [
+        {
+          "name": "Create Student",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/students",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"student@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"+1234567890\",\n  \"dateOfBirth\": \"2010-01-01T00:00:00.000Z\",\n  \"address\": \"123 Main St\",\n  \"emergencyContact\": \"+0987654321\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Students",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/students?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["students"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Student by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/students/1"
+          }
+        },
+        {
+          "name": "Update Student",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/students/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"456 New St\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Student",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/students/1"
+          }
+        },
+        {
+          "name": "Reactivate Student",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/students/1/reactivate"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enrollments",
+      "item": [
+        {
+          "name": "Create Enrollment",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/enrollments",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"classId\": 1,\n  \"amountPaid\": 100.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Enrollments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/enrollments?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["enrollments"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Enrollment by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/enrollments/1"
+          }
+        },
+        {
+          "name": "Update Enrollment",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/enrollments/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amountPaid\": 150.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Confirm Payment",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/enrollments/1/confirm-payment",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscriptionDays\": 30\n}"
+            }
+          }
+        },
+        {
+          "name": "Cancel Enrollment",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/enrollments/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Attendances",
+      "item": [
+        {
+          "name": "Create Attendance",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/attendances",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"classId\": 1,\n  \"enrollmentId\": 1,\n  \"date\": \"2026-03-04\",\n  \"status\": \"PRESENT\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Bulk Create Attendance",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/attendances/bulk",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"classId\": 1,\n  \"date\": \"2026-03-04\",\n  \"records\": [\n    {\"studentId\": 1, \"enrollmentId\": 1, \"status\": \"PRESENT\"},\n    {\"studentId\": 2, \"enrollmentId\": 2, \"status\": \"ABSENT\"}\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Attendance by Class",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/attendances/class/1?date=2026-03-04",
+              "host": ["{{baseUrl}}"],
+              "path": ["attendances", "class", "1"],
+              "query": [{ "key": "date", "value": "2026-03-04" }]
+            }
+          }
+        },
+        {
+          "name": "Get Attendance by Student",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/attendances/student/1"
+          }
+        },
+        {
+          "name": "Get Attendance by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/attendances/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboards",
+      "item": [
+        {
+          "name": "Admin - Get All Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/admin/stats"
+          }
+        },
+        {
+          "name": "Admin - Total Active Students",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/admin/total-active-students"
+          }
+        },
+        {
+          "name": "Admin - Total Enrolled Students",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/admin/total-enrolled-students"
+          }
+        },
+        {
+          "name": "Admin - Active Classes",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/admin/active-classes"
+          }
+        },
+        {
+          "name": "Admin - Full Capacity Classes",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/admin/full-capacity-classes"
+          }
+        },
+        {
+          "name": "Admin - Expired Subscriptions",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/admin/expired-subscriptions"
+          }
+        },
+        {
+          "name": "Admin - Monthly Revenue",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/admin/monthly-revenue"
+          }
+        },
+        {
+          "name": "Student - Enrolled Classes",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/student/enrolled-classes"
+          }
+        },
+        {
+          "name": "Student - Weekly Schedule",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/student/weekly-schedule"
+          }
+        },
+        {
+          "name": "Student - Subscription Status",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/student/subscription-status"
+          }
+        },
+        {
+          "name": "Student - Days Remaining",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/student/days-remaining"
+          }
+        },
+        {
+          "name": "Parent - Students Attendance",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/parent/students-attendance"
+          }
+        },
+        {
+          "name": "Parent - Students Subscription",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/dashboards/parent/students-subscription"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parents",
+      "item": [
+        {
+          "name": "Create Parent",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/parents",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"parent@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"+1234567890\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Parents",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/parents?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Parent by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/parents/1"
+          }
+        },
+        {
+          "name": "Update Parent",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/parents/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+0987654321\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Deactivate Parent",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/parents/1"
+          }
+        },
+        {
+          "name": "Link Student to Parent",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/parents/link-student",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"parentId\": 1,\n  \"studentId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Unlink Student from Parent",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/parents/1/unlink-student/1"
+          }
+        },
+        {
+          "name": "Get Linked Students",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/parents/1/students"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Get All Payments (Admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/payments?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Payment Statistics",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/payments/stats"
+          }
+        },
+        {
+          "name": "Get Payment by Enrollment ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/payments/1"
+          }
+        },
+        {
+          "name": "Get Student Payment History",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/payments/student/1"
+          }
+        },
+        {
+          "name": "Create New Payment",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/payments",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 1,\n  \"amount\": 100.00,\n  \"paymentMethod\": \"CASH\",\n  \"notes\": \"Monthly payment\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Record Additional Payment",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/payments/record",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 1,\n  \"amount\": 50.00,\n  \"paymentMethod\": \"CARD\",\n  \"notes\": \"Additional payment\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Root",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -68,6 +68,9 @@ export class TeachersService {
         orderBy: {
           createdAt: 'desc',
         },
+        omit: {
+          password: true,
+        },
       }),
       this.prisma.user.count({ where }),
     ]);
@@ -87,16 +90,16 @@ export class TeachersService {
     const teacher = await this.prisma.user.findUnique({
       where: { id, role: UserRole.TEACHER },
       // next time
-      // include: {
-      //   teacherProfile: true,
-      // },
+      include: {
+        teacherProfile: true,
+      },
     });
 
     if (!teacher) {
       throw new NotFoundException('Teacher not found');
     }
-
-    return teacher;
+    const { password, ...teacherWithoutPassword } = teacher;
+    return teacherWithoutPassword;
   }
 
   async update(id: number, updateTeacherDto: UpdateTeacherDto) {
@@ -145,5 +148,21 @@ export class TeachersService {
     });
 
     return { message: 'Teacher deactivated successfully' };
+  }
+
+  async getClasses(id: number) {
+    await this.findOne(id);
+
+    const classes = await this.prisma.class.findMany({
+      where: { teacherId: id },
+      include: {
+        room: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return classes;
   }
 }

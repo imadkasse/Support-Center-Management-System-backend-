@@ -13,6 +13,8 @@ import { EnrollmentsModule } from './modules/enrollments/enrollments.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { AttendancesModule } from './modules/attendances/attendances.module';
 import { DashboardsModule } from './modules/dashboards/dashboards.module';
+import { ParentsModule } from './modules/parents/parents.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { DashboardsModule } from './modules/dashboards/dashboards.module';
     SubscriptionsModule,
     AttendancesModule,
     DashboardsModule,
+    ParentsModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

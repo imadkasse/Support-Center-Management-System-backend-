@@ -18,7 +18,7 @@ import { AdminGuard } from '../auth/guards/admin.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('classes')
-@UseGuards(JwtAuthGuard, AdminGuard)
+// @UseGuards(JwtAuthGuard, AdminGuard)
 export class ClassesController {
   constructor(private readonly classesService: ClassesService) {}
 
